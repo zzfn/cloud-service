@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020-12-07 11:44 上午
  */
 @RestController
-@Api("测试")
+@Api(tags="测试")
 public class TestController {
     @GetMapping("test")
     public Object test(){

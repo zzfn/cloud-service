@@ -10,6 +10,17 @@ spring:
         locator:
           lowerCaseServiceId: true
           enabled: true
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+        - id: article
+          uri: lb://article
+          predicates:
+            - Path=/article/**
+      default-filters:
+        - StripPrefix=1
 eureka:
   client:
     service-url:
