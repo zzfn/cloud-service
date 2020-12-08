@@ -5,7 +5,13 @@ eureka:
     prefer-ip-address: true
     ip-address: 127.0.0.1
   client:
-    registerWithEureka: false
-    fetchRegistry: false
     service-url:
-      defaultZone: http://${eureka.instance.ip-address}:${server.port}/eureka/
+      defaultZone: http://eurekaA:8766/eureka/
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 2000
+spring:
+  profiles:
+    active: c
+  application:
+    name: server
