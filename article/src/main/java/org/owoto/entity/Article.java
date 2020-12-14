@@ -2,13 +2,15 @@ package org.owoto.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
+import org.owoto.annotation.Dict;
+
 
 /**
- * @author zzfn
- * @date 2020-12-07 23:56
+ * @author cc
  */
 @Data
-public class Article extends BaseEntity{
+public class Article extends BaseEntity {
+
     /**
      * title
      */
@@ -26,8 +28,10 @@ public class Article extends BaseEntity{
 
     private Integer orderNum;
 
+    @Dict(target = "tagDesc",codeType = "TAG")
     private String tag;
 
     @TableField(exist = false)
     private String tagDesc;
+
 }
