@@ -1,8 +1,0 @@
-server:
-  port: 8767
-eureka:
-  instance:
-    hostname: eurekaC
-  client:
-    service-url:
-      defaultZone: http://eurekaA:8761/eureka/,http://eurekaB:8761/eureka/

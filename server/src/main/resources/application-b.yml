@@ -1,8 +1,9 @@
 server:
-  port: 8766
+  port: 8761
 eureka:
   instance:
-    hostname: eurekaB
+    prefer-ip-address: true
+    ip-address: 47.100.47.169
   client:
     service-url:
-      defaultZone: http://eurekaA:8761/eureka/,http://eurekaC:8761/eureka/
+      defaultZone: http://113.31.126.209:8761/eureka/
