@@ -3,6 +3,7 @@ package org.owoto.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.owoto.dao.ArticleDao;
 import org.owoto.dao.ArticleESDao;
 import org.owoto.entity.Article;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020-12-08 0:02
  */
 @RestController
+@RequestMapping("article")
+@Slf4j
 public class ArticleController {
     @Autowired
     ArticleDao articleDao;
@@ -36,6 +39,13 @@ public class ArticleController {
     @ApiOperation("文章分页列表")
     @GetMapping("listArticles")
     public Object listArticles(PageVO pageVo, String title) {
+        if(pageVo.getPageNumber()==(null)){
+            pageVo.setPageNumber(1);
+        }
+        if(pageVo.getPageSize()==(null)){
+            pageVo.setPageSize(10);
+        }
+        log.error("{}",pageVo.getPageSize());
         IPage<Article> page = new Page<>(pageVo.getPageNumber(), pageVo.getPageSize());
         IPage<Article> pageList = articleDao.listArticle(page,title);
         return ResultUtil.success(pageList);
