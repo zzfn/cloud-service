@@ -22,19 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     @Autowired
     ArticleDao articleDao;
-    @Autowired
-    private ArticleESDao articleESDao;
-
-    @PostMapping("saveArticle")
-    @ApiOperation("保存或修改文章")
-    public Object saveArticle(@RequestBody Article article) {
-        article.setUpdateTime(null);
-        if(null==article.getId()||null == articleDao.selectById(article.getId())){
-            return ResultUtil.success(articleDao.insert(article));
-        }else {
-            return ResultUtil.success(articleDao.updateById(article));
-        }
-    }
 
     @ApiOperation("文章分页列表")
     @GetMapping("listArticles")
@@ -75,10 +62,4 @@ public class ArticleController {
         return ResultUtil.success(articleDao.getArticle(id));
     }
 
-    @ApiOperation("根据id删除文章")
-    @DeleteMapping("removeArticle")
-    public Object removeArticle(@RequestBody Article article) {
-        articleESDao.deleteById(article.getId());
-        return ResultUtil.success(articleDao.deleteById(article.getId()));
-    }
 }
