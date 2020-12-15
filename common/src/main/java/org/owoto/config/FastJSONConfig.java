@@ -34,6 +34,7 @@ public class FastJSONConfig {
         );
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-        return new HttpMessageConverters(fastJsonHttpMessageConverter);
+        HttpMessageConverter<?> converter = fastJsonHttpMessageConverter;
+        return new HttpMessageConverters(converter);
     }
 }

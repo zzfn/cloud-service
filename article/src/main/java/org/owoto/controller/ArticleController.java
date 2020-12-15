@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.owoto.dao.ArticleDao;
-import org.owoto.dao.ArticleESDao;
 import org.owoto.entity.Article;
-import org.owoto.utils.ResultUtil;
+import org.owoto.util.ResultUtil;
 import org.owoto.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,19 +22,21 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     @Autowired
     ArticleDao articleDao;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @ApiOperation("文章分页列表")
     @GetMapping("listArticles")
     public Object listArticles(PageVO pageVo, String title) {
-        if(pageVo.getPageNumber()==(null)){
+        if (pageVo.getPageNumber() == (null)) {
             pageVo.setPageNumber(1);
         }
-        if(pageVo.getPageSize()==(null)){
+        if (pageVo.getPageSize() == (null)) {
             pageVo.setPageSize(10);
         }
-        log.error("{}",pageVo.getPageSize());
+        log.error("{}", pageVo.getPageSize());
         IPage<Article> page = new Page<>(pageVo.getPageNumber(), pageVo.getPageSize());
-        IPage<Article> pageList = articleDao.listArticle(page,title);
+        IPage<Article> pageList = articleDao.listArticle(page, title);
         return ResultUtil.success(pageList);
     }
 
@@ -62,4 +64,9 @@ public class ArticleController {
         return ResultUtil.success(articleDao.getArticle(id));
     }
 
+    @ApiOperation("根据id查询文章详情")
+    @GetMapping("test")
+    public Object test(String id) {
+        return ResultUtil.success(redisTemplate.opsForValue().get("test"));
+    }
 }

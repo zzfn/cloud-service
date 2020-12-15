@@ -1,4 +1,4 @@
-package org.owoto.utils;
+package org.owoto.util;
 
 import java.util.HashMap;
 import java.util.Map;

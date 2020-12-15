@@ -4,7 +4,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.owoto.dao.ArticleESDao;
 import org.owoto.entity.ArticleES;
-import org.owoto.utils.ResultUtil;
+import org.owoto.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.web.bind.annotation.*;
