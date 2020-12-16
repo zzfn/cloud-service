@@ -10,10 +10,7 @@ import org.owoto.util.RedisUtil;
 import org.owoto.util.ResultUtil;
 import org.owoto.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author zzfn
