@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020-12-08 0:02
  */
 @RestController
-@RequestMapping("article")
+@RequestMapping("v1")
 @Slf4j
 public class ArticleController {
     @Autowired

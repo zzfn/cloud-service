@@ -1,10 +1,7 @@
-server:
-  port: 8761
 eureka:
   instance:
     prefer-ip-address: true
-#    ip-address: 47.100.47.169
     instance-id: server-ali:8761
   client:
     service-url:
-      defaultZone: http://113.31.126.209:8761/eureka/
+      defaultZone: http://47.100.47.169:8761/eureka,http://113.31.126.209:8761/eureka,

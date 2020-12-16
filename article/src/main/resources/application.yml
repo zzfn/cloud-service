@@ -1,6 +1,8 @@
 server:
   port: 8764
 spring:
+  profiles:
+    active: dev
   elasticsearch:
     rest:
       uris: 119.3.155.253:9200
@@ -27,13 +29,9 @@ spring:
         stat:
           log-slow-sql: true
 eureka:
-  client:
-    service-url:
-      defaultZone: http://47.100.47.169:8761/eureka,http://113.31.126.209:8761/eureka
   instance:
 #    ip-address: 127.0.0.1
     prefer-ip-address: true
-    instance-id: article:8763
 logging:
   level:
     org.springframework.cloud.gateway: debug
