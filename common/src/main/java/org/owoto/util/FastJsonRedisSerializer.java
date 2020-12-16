@@ -1,6 +1,7 @@
 package org.owoto.util;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -10,7 +11,9 @@ import java.nio.charset.Charset;
 public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     private Class<T> clazz;
-
+    static {
+        ParserConfig.getGlobalInstance().addAccept("org.owoto.entity");
+    }
     public FastJsonRedisSerializer(Class<T> clazz) {
         super();
         this.clazz = clazz;

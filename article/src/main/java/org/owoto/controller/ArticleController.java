@@ -4,13 +4,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.owoto.dao.ArticleDao;
+import org.owoto.mapper.ArticleMapper;
 import org.owoto.entity.Article;
+import org.owoto.util.RedisUtil;
 import org.owoto.util.ResultUtil;
 import org.owoto.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author zzfn
@@ -21,52 +24,51 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class ArticleController {
     @Autowired
-    ArticleDao articleDao;
+    ArticleMapper articleMapper;
     @Autowired
-    RedisTemplate redisTemplate;
+    RedisUtil redisUtil;
 
     @ApiOperation("文章分页列表")
-    @GetMapping("listArticles")
-    public Object listArticles(PageVO pageVo, String title) {
+    @GetMapping("page")
+    public Object listArticles(PageVO pageVo) {
         if (pageVo.getPageNumber() == (null)) {
             pageVo.setPageNumber(1);
         }
         if (pageVo.getPageSize() == (null)) {
             pageVo.setPageSize(10);
         }
-        log.error("{}", pageVo.getPageSize());
         IPage<Article> page = new Page<>(pageVo.getPageNumber(), pageVo.getPageSize());
-        IPage<Article> pageList = articleDao.listArticle(page, title);
+        IPage<Article> pageList = articleMapper.selectPage(page, null);
+        pageList.getRecords().forEach(article -> {
+                    if (redisUtil.get(article.getId()) == null) {
+                        redisUtil.incr(article.getId(), 1);
+                        article.setViewCount(0L);
+                    } else {
+                        article.setViewCount(((Number) redisUtil.get(article.getId())).longValue());
+                    }
+                }
+        );
         return ResultUtil.success(pageList);
     }
 
-    @ApiOperation("文章总数")
-    @GetMapping("countArticles")
-    public Object countArticles() {
-        return ResultUtil.success(articleDao.selectCount(null));
-    }
-
     @ApiOperation("文章分类")
-    @GetMapping("listTags")
+    @GetMapping("tags")
     public Object listTags() {
-        return ResultUtil.success(articleDao.getTags());
+        return ResultUtil.success(articleMapper.getTags());
     }
 
     @ApiOperation("文章列表不分页")
-    @GetMapping("listArchives")
+    @GetMapping("list")
     public Object listArchives(String code) {
-        return ResultUtil.success(articleDao.getArchives(code));
+        return ResultUtil.success(articleMapper.getArchives(code));
     }
 
     @ApiOperation("根据id查询文章详情")
     @GetMapping("getArticle")
     public Object getArticle(String id) {
-        return ResultUtil.success(articleDao.getArticle(id));
+        Article article = articleMapper.selectById(id);
+        article.setViewCount(redisUtil.incr(id, 1));
+        return ResultUtil.success(article);
     }
 
-    @ApiOperation("根据id查询文章详情")
-    @GetMapping("test")
-    public Object test(String id) {
-        return ResultUtil.success(redisTemplate.opsForValue().get("test"));
-    }
 }

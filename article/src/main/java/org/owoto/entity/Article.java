@@ -23,7 +23,7 @@ public class Article extends BaseEntity {
 
 
     @TableField(exist = false)
-    private Integer viewCount;
+    private Long viewCount;
 
 
     private Integer orderNum;

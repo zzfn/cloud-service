@@ -1,11 +1,9 @@
-package org.owoto.dao;
+package org.owoto.mapper;
 
 
 import org.owoto.entity.ArticleES;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * @author zzfn
