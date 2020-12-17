@@ -3,8 +3,8 @@ server:
 eureka:
   instance:
     prefer-ip-address: true
-#    ip-address: 113.31.126.209
-    instance-id: server-ucloud:8761
+    ip-address: 113.31.126.209
+    instance-id: ${eureka.instance.ip-address}:${server.port}
   client:
     service-url:
       defaultZone: http://47.100.47.169:8761/eureka/

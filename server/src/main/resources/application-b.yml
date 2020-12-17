@@ -3,8 +3,8 @@ server:
 eureka:
   instance:
     prefer-ip-address: true
-#    ip-address: 47.100.47.169
-    instance-id: server-ali:8761
+    ip-address: 47.100.47.169
+    instance-id: ${eureka.instance.ip-address}:${server.port}
   client:
     service-url:
       defaultZone: http://113.31.126.209:8761/eureka/
