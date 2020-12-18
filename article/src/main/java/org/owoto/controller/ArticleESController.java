@@ -15,7 +15,9 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,39 +38,34 @@ public class ArticleESController {
     public Object listTags(@RequestBody ArticleES articleES) {
         return ResultUtil.success(articleESDao.save(articleES));
     }
+
     @PostMapping("del")
     public Object del() {
         articleESDao.deleteAll();
         elasticsearchRestTemplate.deleteIndex("article");
         return ResultUtil.success(null);
     }
+
     @GetMapping("list")
     public Object getList(String keyword) {
-        BoolQueryBuilder queryBuilder= QueryBuilders.boolQuery();
-        queryBuilder.should(QueryBuilders.matchPhraseQuery("title",keyword))
-                .should(QueryBuilders.matchPhraseQuery("content",keyword))
-                .should(QueryBuilders.matchPhraseQuery("tag_desc",keyword));
-        NativeSearchQuery nativeSearchQuery=new NativeSearchQueryBuilder().withQuery(queryBuilder).withHighlightBuilder(new HighlightBuilder().field("title").field("content").field("tag_desc").fragmentSize(50)).build();
-//        Iterable<ArticleES> pages=articleESDao.search(nativeSearchQuery);
-//        Iterable<ArticleES> pages=articleESDao.search(queryBuilder);
-        List<ArticleES> list=new ArrayList<>();
-       SearchHits<ArticleES> articleES= elasticsearchRestTemplate.search(nativeSearchQuery,ArticleES.class);
-       articleES.getSearchHits().forEach(searchHit -> {
-           ArticleES articleES1=searchHit.getContent();
-           articleES1.setContent(StringUtils.join(searchHit.getHighlightField("content")," "));
-           if(searchHit.getHighlightField("tag_desc").size()!=0){
-               articleES1.setTagDesc(StringUtils.join(searchHit.getHighlightField("tag_desc")," "));
-           }
-           if(searchHit.getHighlightField("title").size()!=0){
-               articleES1.setTitle(StringUtils.join(searchHit.getHighlightField("title")," "));
-           }
-           list.add(articleES1);
-       });
-//       articleES.forEach(searchHit -> {
-//           searchHit.getHighlightFields();
-//           ArticleES.builder().title(searchHit.get)
-//           list.add(searchHit.getHighlightFields());
-//       });
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        queryBuilder.should(QueryBuilders.matchPhraseQuery("title", keyword))
+                .should(QueryBuilders.matchPhraseQuery("content", keyword))
+                .should(QueryBuilders.matchPhraseQuery("tag_desc", keyword));
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder().withQuery(queryBuilder).withHighlightBuilder(new HighlightBuilder().field("title").field("content").field("tag_desc").fragmentSize(50)).build();
+        List<ArticleES> list = new ArrayList<>();
+        SearchHits<ArticleES> articleES = elasticsearchRestTemplate.search(nativeSearchQuery, ArticleES.class);
+        articleES.getSearchHits().forEach(searchHit -> {
+            ArticleES articleES1 = searchHit.getContent();
+            articleES1.setContent(StringUtils.join(searchHit.getHighlightField("content")," "));
+            if (searchHit.getHighlightField("tag_desc").size() != 0) {
+                articleES1.setTagDesc(StringUtils.join(searchHit.getHighlightField("tag_desc"), " "));
+            }
+            if (searchHit.getHighlightField("title").size() != 0) {
+                articleES1.setTitle(StringUtils.join(searchHit.getHighlightField("title"), " "));
+            }
+            list.add(articleES1);
+        });
         return ResultUtil.success(list);
     }
 }

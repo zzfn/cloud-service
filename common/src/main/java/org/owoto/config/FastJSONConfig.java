@@ -23,18 +23,18 @@ public class FastJSONConfig {
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         List<MediaType> mediaTypes = new ArrayList<>();
-        mediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        mediaTypes.add(MediaType.APPLICATION_JSON);
         fastJsonHttpMessageConverter.setSupportedMediaTypes(mediaTypes);
         fastJsonConfig.setSerializerFeatures(
                 SerializerFeature.DisableCircularReferenceDetect,
                 SerializerFeature.PrettyFormat,
                 SerializerFeature.IgnoreNonFieldGetter,
                 SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.WriteMapNullValue
         );
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-        HttpMessageConverter<?> converter = fastJsonHttpMessageConverter;
-        return new HttpMessageConverters(converter);
+        return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
 }
