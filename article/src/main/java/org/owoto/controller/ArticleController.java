@@ -1,5 +1,6 @@
 package org.owoto.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +36,7 @@ public class ArticleController {
             pageVo.setPageSize(10);
         }
         IPage<Article> page = new Page<>(pageVo.getPageNumber(), pageVo.getPageSize());
-        IPage<Article> pageList = articleMapper.selectPage(page, null);
+        IPage<Article> pageList = articleMapper.selectPage(page, new QueryWrapper<Article>().orderByDesc("ORDER_NUM").orderByDesc("CREATE_TIME"));
         pageList.getRecords().forEach(article -> {
                     if (redisUtil.get(article.getId()) == null) {
                         redisUtil.incr(article.getId(), 1);
