@@ -1,6 +1,7 @@
 package org.owoto.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
@@ -16,6 +17,7 @@ import java.util.Date;
  */
 @Document(indexName = "article", type = "_doc", replicas = 0, shards = 5)
 @Data
+@Builder
 public class ArticleES {
     @Id
     private String id;
