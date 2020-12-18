@@ -61,7 +61,7 @@ public class ArticleController {
     }
 
     @ApiOperation("根据id查询文章详情")
-    @GetMapping("getArticle")
+    @GetMapping("article")
     public Object getArticle(String id) {
         Article article = articleMapper.selectById(id);
         article.setViewCount(redisUtil.incr(id, 1));
