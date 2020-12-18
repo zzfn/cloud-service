@@ -52,14 +52,14 @@ public class ArticleESController {
         queryBuilder.should(QueryBuilders.matchPhraseQuery("title", keyword))
                 .should(QueryBuilders.matchPhraseQuery("content", keyword))
                 .should(QueryBuilders.matchPhraseQuery("tag_desc", keyword));
-        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder().withQuery(queryBuilder).withHighlightBuilder(new HighlightBuilder().field("title").field("content").field("tag_desc").fragmentSize(50)).build();
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder().withQuery(queryBuilder).withHighlightBuilder(new HighlightBuilder().field("title").field("content").field("tag_desc")).build();
         List<ArticleES> list = new ArrayList<>();
         SearchHits<ArticleES> articleES = elasticsearchRestTemplate.search(nativeSearchQuery, ArticleES.class);
         articleES.getSearchHits().forEach(searchHit -> {
             ArticleES articleES1 = searchHit.getContent();
             articleES1.setContent(StringUtils.join(searchHit.getHighlightField("content")," "));
-            if (searchHit.getHighlightField("tag_desc").size() != 0) {
-                articleES1.setTagDesc(StringUtils.join(searchHit.getHighlightField("tag_desc"), " "));
+            if (searchHit.getHighlightField("tagDesc").size() != 0) {
+                articleES1.setTagDesc(StringUtils.join(searchHit.getHighlightField("tagDesc"), " "));
             }
             if (searchHit.getHighlightField("title").size() != 0) {
                 articleES1.setTitle(StringUtils.join(searchHit.getHighlightField("title"), " "));
