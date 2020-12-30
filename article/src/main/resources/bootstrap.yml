@@ -2,10 +2,6 @@ spring:
   application:
     name: article
   cloud:
-    inetutils:
-      preferred-networks:
-        - 47.100
-        - 113.31
     nacos:
       config:
         server-addr: 47.100.47.169:8848
