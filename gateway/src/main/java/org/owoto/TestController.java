@@ -1,9 +1,13 @@
 package org.owoto;
 
 import io.swagger.annotations.ApiOperation;
+import org.owoto.util.JwtTokenUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zzfn
@@ -15,5 +19,11 @@ public class TestController {
     @GetMapping("v1")
     public Object getArticle(String id) {
         return "成功";
+    }
+    @GetMapping("token")
+    public Object token() {
+        Map<String,Object> hashMap=new HashMap<>();
+        hashMap.put("uid","dsad");
+        return JwtTokenUtil.generateToken(hashMap);
     }
 }
