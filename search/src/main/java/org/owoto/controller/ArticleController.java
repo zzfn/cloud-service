@@ -59,8 +59,7 @@ public class ArticleController {
     }
     @GetMapping("{id}")
     public Object test(@PathVariable("id") String id) {
-        log.error("sadasd");
-        return id;
-//        return elasticsearchRestTemplate.delete(id, Article.class);
+        log.error(id);
+        return elasticsearchRestTemplate.delete(id, Article.class);
     }
 }
