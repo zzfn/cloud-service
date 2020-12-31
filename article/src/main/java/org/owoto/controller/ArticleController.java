@@ -74,8 +74,12 @@ public class ArticleController {
     @GetMapping("article")
     public Object getArticle(String id) {
         Article article = articleMapper.selectById(id);
-        article.setViewCount(redisUtil.incr(id, 1));
-        return ResultUtil.success(article);
+        if (article != null) {
+            article.setViewCount(redisUtil.incr(id, 1));
+            return ResultUtil.success(article);
+        } else {
+            return ResultUtil.error("未找到结果");
+        }
     }
 
 }
