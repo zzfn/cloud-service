@@ -1,7 +1,5 @@
 package org.owoto.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -14,12 +12,12 @@ import java.util.Date;
 
 /**
  * @author zzfn
- * @date 2020-12-10 14:49
+ * @date 2020-12-31 3:36 下午
  */
 @Document(indexName = "article", replicas = 0, shards = 5)
 @Data
 @Builder
-public class ArticleES {
+public class Article {
     @Id
     private String id;
     @Field(type = FieldType.Text, analyzer = "ik_max_world")

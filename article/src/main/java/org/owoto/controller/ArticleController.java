@@ -5,15 +5,18 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.owoto.mapper.ArticleESDao;
 import org.owoto.mapper.ArticleMapper;
 import org.owoto.entity.Article;
 import org.owoto.service.ArticleService;
+import org.owoto.service.SearchService;
 import org.owoto.util.RedisUtil;
 import org.owoto.util.ResultUtil;
 import org.owoto.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author zzfn
@@ -26,9 +29,9 @@ public class ArticleController {
     @Autowired
     ArticleMapper articleMapper;
     @Autowired
-    private ArticleESDao articleESDao;
-    @Autowired
     ArticleService articleService;
+    @Autowired
+    SearchService searchService;
     @Autowired
     RedisUtil redisUtil;
 
@@ -88,7 +91,7 @@ public class ArticleController {
     @ApiOperation("根据id删除文章")
     @DeleteMapping("article")
     public Object removeArticle(@RequestBody Article article) {
-        articleESDao.deleteById(article.getId());
+        searchService.deleteById(article.getId());
         return ResultUtil.success(articleMapper.deleteById(article.getId()));
     }
 }
