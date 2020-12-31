@@ -78,7 +78,7 @@ public class DictAspect {
                     targetField.set(content, name);
                 }
             }
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
