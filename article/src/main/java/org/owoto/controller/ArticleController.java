@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.owoto.mapper.ArticleMapper;
 import org.owoto.entity.Article;
+import org.owoto.service.ArticleService;
 import org.owoto.util.RedisUtil;
 import org.owoto.util.ResultUtil;
 import org.owoto.vo.PageVO;
@@ -18,13 +19,21 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020-12-08 0:02
  */
 @RestController
-@RequestMapping("v1")
+@RequestMapping("v1/white")
 @Slf4j
 public class ArticleController {
     @Autowired
     ArticleMapper articleMapper;
     @Autowired
+    ArticleService articleService;
+    @Autowired
     RedisUtil redisUtil;
+
+    @PostMapping("article")
+    @ApiOperation("保存或修改文章")
+    public Object saveArticle(@RequestBody Article article) {
+        return ResultUtil.success(articleService.saveOrUpdate(article));
+    }
 
     @ApiOperation("文章分页列表")
     @GetMapping("page")
