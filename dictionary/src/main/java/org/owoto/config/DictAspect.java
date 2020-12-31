@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.owoto.annotation.Dict;
 import org.owoto.entity.BaseEntity;
-import org.owoto.service.SysDictService;
+import org.owoto.service.DictService;
 import org.owoto.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class DictAspect {
     @Autowired
     RedisUtil redisUtil;
     @Autowired
-    SysDictService sysDictService;
+    DictService dictService;
 
     @Pointcut("execution( * org.owoto.controller.*.*(..))")
     public void dictExecution() {
@@ -73,7 +73,7 @@ public class DictAspect {
                 if (field.isAnnotationPresent(Dict.class)) {
                     field.setAccessible(true);
                     Dict dict = field.getAnnotation(Dict.class);
-                    String name = sysDictService.translate(dict.codeType(), (String) field.get(content));
+                    String name = dictService.translate(dict.codeType(), (String) field.get(content));
                     Field targetField = FieldUtils.getField(content.getClass(), dict.target(), true);
                     targetField.set(content, name);
                 }
