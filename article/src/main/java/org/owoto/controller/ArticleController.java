@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Slf4j
-@RequestMapping("article")
+@RequestMapping("non")
 public class ArticleController {
     @Autowired
     ArticleMapper articleMapper;

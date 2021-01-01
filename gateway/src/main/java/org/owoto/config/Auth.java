@@ -18,6 +18,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "auth")
 @Getter
 @Setter
-public class AuthList {
-    private String list;
+public class Auth {
+    private String sys;
+    private String non;
 }

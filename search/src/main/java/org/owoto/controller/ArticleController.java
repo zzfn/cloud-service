@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2020-12-31 3:35 下午
  */
 @RestController
-@RequestMapping("article")
+@RequestMapping("/non/article")
 @Slf4j
 public class ArticleController {
     @Autowired
@@ -53,13 +53,6 @@ public class ArticleController {
 
     @DeleteMapping("{id}")
     public Object deleteArticle(@PathVariable("id") String id) {
-        log.error("sadasd");
-        return "dasdasd";
-//        return elasticsearchRestTemplate.delete(id, Article.class);
-    }
-    @GetMapping("{id}")
-    public Object test(@PathVariable("id") String id) {
-        log.error(id);
         return elasticsearchRestTemplate.delete(id, Article.class);
     }
 }

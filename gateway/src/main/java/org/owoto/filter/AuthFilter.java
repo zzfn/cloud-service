@@ -4,7 +4,7 @@ package org.owoto.filter;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.owoto.config.AuthList;
+import org.owoto.config.Auth;
 import org.owoto.util.JwtTokenUtil;
 import org.owoto.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 /**
@@ -31,15 +30,13 @@ import java.util.regex.Pattern;
 @Slf4j
 public class AuthFilter implements GlobalFilter {
     @Autowired
-    private AuthList authList;
+    private Auth auth;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String url = request.getURI().getPath();
-        log.error("{},{}",authList.getList(),url);
-        log.error("{}",Pattern.matches(authList.getList(), url));
-        if(!Pattern.matches(authList.getList(), url)){
+        if (Pattern.matches(auth.getNon(), url)) {
             return chain.filter(exchange);
         }
         HttpHeaders httpHeaders = request.getHeaders();
