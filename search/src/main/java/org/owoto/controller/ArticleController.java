@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2020-12-31 3:35 下午
  */
 @RestController
-@RequestMapping("white/article")
+@RequestMapping("article")
 @Slf4j
 public class ArticleController {
     @Autowired

@@ -1,4 +1,4 @@
-package org.owoto.vo;
+package org.owoto.entity;
 
 import lombok.Data;
 
@@ -7,8 +7,8 @@ import lombok.Data;
  */
 @Data
 public class PageVO {
-    private Integer pageNumber;
-    private Integer pageSize;
+    private Integer pageNumber = 1;
+    private Integer pageSize = 10;
     private String field;
     private String order;
 }

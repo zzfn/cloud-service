@@ -5,62 +5,42 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.owoto.mapper.ArticleMapper;
 import org.owoto.entity.Article;
+import org.owoto.entity.PageVO;
+import org.owoto.mapper.ArticleMapper;
 import org.owoto.service.ArticleService;
-import org.owoto.service.SearchService;
 import org.owoto.util.RedisUtil;
 import org.owoto.util.ResultUtil;
-import org.owoto.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author zzfn
  * @date 2020-12-08 0:02
  */
 @RestController
-@RequestMapping("v1/white")
 @Slf4j
+@RequestMapping("article")
 public class ArticleController {
     @Autowired
     ArticleMapper articleMapper;
+
     @Autowired
     ArticleService articleService;
-    @Autowired
-    SearchService searchService;
+
     @Autowired
     RedisUtil redisUtil;
-
-    @PostMapping("article")
-    @ApiOperation("保存或修改文章")
-    public Object saveArticle(@RequestBody Article article) {
-        return ResultUtil.success(articleService.saveOrUpdate(article));
-    }
 
     @ApiOperation("文章分页列表")
     @GetMapping("page")
     public Object listArticles(PageVO pageVo) {
-        if (pageVo.getPageNumber() == (null)) {
-            pageVo.setPageNumber(1);
-        }
-        if (pageVo.getPageSize() == (null)) {
-            pageVo.setPageSize(10);
-        }
+        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("ORDER_NUM").orderByDesc("CREATE_TIME");
         IPage<Article> page = new Page<>(pageVo.getPageNumber(), pageVo.getPageSize());
-        IPage<Article> pageList = articleMapper.selectPage(page, new QueryWrapper<Article>().orderByDesc("ORDER_NUM").orderByDesc("CREATE_TIME"));
-        pageList.getRecords().forEach(article -> {
-                    if (redisUtil.get(article.getId()) == null) {
-                        redisUtil.incr(article.getId(), 1);
-                        article.setViewCount(0L);
-                    } else {
-                        article.setViewCount(((Number) redisUtil.get(article.getId())).longValue());
-                    }
-                }
-        );
+        IPage<Article> pageList = articleMapper.selectPage(page, queryWrapper);
         return ResultUtil.success(pageList);
     }
 
@@ -77,8 +57,8 @@ public class ArticleController {
     }
 
     @ApiOperation("根据id查询文章详情")
-    @GetMapping("article")
-    public Object getArticle(String id) {
+    @GetMapping("{id}}")
+    public Object getArticle(@PathVariable("id") String id) {
         Article article = articleMapper.selectById(id);
         if (article != null) {
             article.setViewCount(redisUtil.incr(id, 1));
@@ -86,12 +66,5 @@ public class ArticleController {
         } else {
             return ResultUtil.error("未找到结果");
         }
-    }
-
-    @ApiOperation("根据id删除文章")
-    @DeleteMapping("article")
-    public Object removeArticle(@RequestBody Article article) {
-        searchService.deleteById(article.getId());
-        return ResultUtil.success(articleMapper.deleteById(article.getId()));
     }
 }
