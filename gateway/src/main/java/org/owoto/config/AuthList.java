@@ -15,9 +15,9 @@ import java.util.List;
  */
 @Configuration
 @RefreshScope
-@ConfigurationProperties(prefix = "ignore")
+@ConfigurationProperties(prefix = "auth")
 @Getter
 @Setter
-public class WhiteList {
-    private List<String> whites = new ArrayList<>();
+public class AuthList {
+    private String list;
 }
