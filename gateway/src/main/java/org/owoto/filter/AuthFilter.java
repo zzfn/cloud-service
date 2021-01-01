@@ -22,6 +22,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.regex.Pattern;
 
+import static com.alibaba.nacos.common.utils.HttpMethod.OPTIONS;
+
 /**
  * @author zzfn
  * @date 2020-12-30 4:29 下午
@@ -35,6 +37,9 @@ public class AuthFilter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        if(request.getMethod().matches(OPTIONS)){
+            return chain.filter(exchange);
+        }
         String url = request.getURI().getPath();
         if (Pattern.matches(auth.getNon(), url)) {
             return chain.filter(exchange);

@@ -57,7 +57,7 @@ public class ArticleController {
     }
 
     @ApiOperation("根据id查询文章详情")
-    @GetMapping("{id}}")
+    @GetMapping("{id}")
     public Object getArticle(@PathVariable("id") String id) {
         Article article = articleMapper.selectById(id);
         if (article != null) {
