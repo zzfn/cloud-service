@@ -28,6 +28,11 @@ public class Article extends BaseEntity {
 
     private Integer orderNum;
 
+    /**
+     * 是否发布
+     */
+    private char isRelease;
+
     @Dict(target = "tagDesc",codeType = "TAG")
     private String tag;
 

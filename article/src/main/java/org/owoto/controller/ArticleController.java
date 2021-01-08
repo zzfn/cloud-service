@@ -38,7 +38,7 @@ public class ArticleController {
     @GetMapping("page")
     public Object listArticles(PageVO pageVo) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("ORDER_NUM").orderByDesc("CREATE_TIME");
+        queryWrapper.eq("IS_RELEASE",0).orderByDesc("ORDER_NUM").orderByDesc("CREATE_TIME");
         IPage<Article> page = new Page<>(pageVo.getPageNumber(), pageVo.getPageSize());
         IPage<Article> pageList = articleMapper.selectPage(page, queryWrapper);
         pageList.getRecords().forEach(article -> {
@@ -70,17 +70,6 @@ public class ArticleController {
         Article article = articleMapper.selectById(id);
         if (article != null) {
             article.setViewCount(redisUtil.incr(id, 1));
-            return ResultUtil.success(article);
-        } else {
-            return ResultUtil.error("未找到结果");
-        }
-    }
-
-    @ApiOperation("服务端渲染查详情")
-    @GetMapping("server/{id}")
-    public Object getServerArticle(@PathVariable("id") String id) {
-        Article article = articleMapper.selectById(id);
-        if (article != null) {
             return ResultUtil.success(article);
         } else {
             return ResultUtil.error("未找到结果");
