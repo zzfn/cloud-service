@@ -41,6 +41,14 @@ public class ArticleController {
         queryWrapper.orderByDesc("ORDER_NUM").orderByDesc("CREATE_TIME");
         IPage<Article> page = new Page<>(pageVo.getPageNumber(), pageVo.getPageSize());
         IPage<Article> pageList = articleMapper.selectPage(page, queryWrapper);
+        pageList.getRecords().forEach(article -> {
+            if (redisUtil.get(article.getId()) == null) {
+                redisUtil.incr(article.getId(), 1);
+                article.setViewCount(0L);
+            } else {
+                article.setViewCount(((Number) redisUtil.get(article.getId())).longValue());
+            }
+        });
         return ResultUtil.success(pageList);
     }
 
@@ -62,6 +70,17 @@ public class ArticleController {
         Article article = articleMapper.selectById(id);
         if (article != null) {
             article.setViewCount(redisUtil.incr(id, 1));
+            return ResultUtil.success(article);
+        } else {
+            return ResultUtil.error("未找到结果");
+        }
+    }
+
+    @ApiOperation("服务端渲染查详情")
+    @GetMapping("server/{id}")
+    public Object getServerArticle(@PathVariable("id") String id) {
+        Article article = articleMapper.selectById(id);
+        if (article != null) {
             return ResultUtil.success(article);
         } else {
             return ResultUtil.error("未找到结果");
